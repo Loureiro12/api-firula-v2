@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvironmentVariables } from './config/environment.config';
 import { AppConfigModule } from './config/app-config.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 
@@ -27,6 +29,8 @@ import { validateSync } from 'class-validator';
       },
     }),
     AppConfigModule,
+    PrismaModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
