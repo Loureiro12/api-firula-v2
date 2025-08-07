@@ -1,10 +1,27 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/app-config.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Configure global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Remove propriedades não definidas no DTO
+      forbidNonWhitelisted: true, // Lança erro se propriedades não permitidas forem enviadas
+      transform: true, // Transforma automaticamente os tipos
+      transformOptions: {
+        enableImplicitConversion: true, // Converte tipos automaticamente
+      },
+    }),
+  );
+
+  // Configure global exception filter for validation errors
+  app.useGlobalFilters(new ValidationExceptionFilter());
 
   const configService = app.get(AppConfigService);
   const port = configService.port;
@@ -29,7 +46,8 @@ async function bootstrap() {
     .setTitle('API Firula v2')
     .setDescription('API documentation for Firula v2')
     .setVersion('2.0')
-    .addTag('users', 'User management endpoints')
+    .addTag('User Creation', 'User creation endpoint with email validation')
+    .addTag('users', 'User management endpoints (CRUD operations)')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

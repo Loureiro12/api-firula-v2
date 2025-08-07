@@ -15,7 +15,6 @@ export class PrismaService
 
   async onModuleInit() {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await this.$connect();
       this.logger.log('Successfully connected to database');
     } catch (error) {
@@ -26,7 +25,6 @@ export class PrismaService
 
   async onModuleDestroy() {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       await this.$disconnect();
       this.logger.log('Successfully disconnected from database');
     } catch (error) {
